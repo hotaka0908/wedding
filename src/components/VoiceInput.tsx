@@ -11,8 +11,9 @@ export function VoiceInput({ onTranscript }: VoiceInputProps) {
   React.useEffect(() => {
     if (transcript && !isListening) {
       onTranscript(transcript);
+      resetTranscript();
     }
-  }, [transcript, isListening, onTranscript]);
+  }, [transcript, isListening, onTranscript, resetTranscript]);
 
   const handleStartListening = () => {
     resetTranscript();
@@ -34,11 +35,6 @@ export function VoiceInput({ onTranscript }: VoiceInputProps) {
         )}
       </button>
 
-      {transcript && (
-        <div className="transcript">
-          認識された音声: {transcript}
-        </div>
-      )}
 
       {!('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) && (
         <p className="error-message">

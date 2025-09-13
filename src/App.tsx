@@ -30,7 +30,7 @@ function App() {
 
     const match = findBestMatch(transcript, guestNames);
 
-    if (match && match.similarity >= 0.3) {
+    if (match && match.similarity >= 0.9) {
       const guest = availableGuests.find(g => g.name === match.name);
       if (guest) {
         setGuests(prevGuests =>
@@ -41,9 +41,8 @@ function App() {
           )
         );
 
-        const firstName = guest.name.length >= 3 ? guest.name.slice(0, -2) : guest.name.slice(0, -1);
         setCheckinMessage({
-          message: `${guest.name} ${firstName}さん来てくれてありがとう！`,
+          message: `${guest.name}さん来てくれてありがとう！`,
           type: 'success'
         });
       }
@@ -60,7 +59,7 @@ function App() {
           message: '全てのゲストが既に受付済みです。',
           type: 'info'
         });
-      } else {
+      } else if (!match || match.similarity < 0.1) {
         setCheckinMessage({
           message: `「${transcript}」に該当するゲストが見つかりませんでした。もう一度はっきりとお名前をお話しください。`,
           type: 'error'
@@ -100,7 +99,7 @@ function App() {
   return (
     <div className="app">
       <header className="app-header">
-        <h1>🎉 ウェディング受付システム</h1>
+        <h1>YUKI & KENTA Wedding</h1>
       </header>
 
       <main className="app-main">

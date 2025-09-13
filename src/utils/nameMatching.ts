@@ -41,24 +41,7 @@ export function calculateSimilarity(name1: string, name2: string): number {
     return 0.95;
   }
 
-  if (normalized1.includes(normalized2) || normalized2.includes(normalized1)) {
-    return 0.8;
-  }
-
-  if (hiragana1.includes(hiragana2) || hiragana2.includes(hiragana1)) {
-    return 0.75;
-  }
-
-  const distance = levenshteinDistance(normalized1, normalized2);
-  const hiraganaDistance = levenshteinDistance(hiragana1, hiragana2);
-
-  const maxLength = Math.max(normalized1.length, normalized2.length);
-  if (maxLength === 0) return 0;
-
-  const basicSimilarity = 1 - (distance / maxLength);
-  const hiraganaSimilarity = 1 - (hiraganaDistance / maxLength);
-
-  return Math.max(basicSimilarity, hiraganaSimilarity);
+  return 0.0;
 }
 
 function levenshteinDistance(str1: string, str2: string): number {
@@ -90,19 +73,14 @@ export function findBestMatch(inputName: string, guestNames: string[]): { name: 
   let bestMatch = null;
   let highestSimilarity = 0;
 
-  console.log('🔍 音声認識結果:', inputName);
-  console.log('📝 正規化後:', normalizeJapaneseName(inputName));
-
   for (const name of guestNames) {
     const similarity = calculateSimilarity(inputName, name);
-    console.log(`📊 ${name} との類似度: ${similarity.toFixed(3)}`);
 
-    if (similarity > highestSimilarity && similarity >= 0.3) {
+    if (similarity > highestSimilarity && similarity >= 0.9) {
       highestSimilarity = similarity;
       bestMatch = { name, similarity };
     }
   }
 
-  console.log('🎯 最良マッチ:', bestMatch);
   return bestMatch;
 }
