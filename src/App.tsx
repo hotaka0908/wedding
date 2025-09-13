@@ -101,12 +101,12 @@ function App() {
       <header className="app-header">
         <h1>YUKI & KENTA Wedding</h1>
         <img src="/image.jpg" alt="Wedding Photo" className="wedding-photo" />
+        <section className="voice-section-overlay">
+          <VoiceInput onTranscript={handleVoiceTranscript} />
+        </section>
       </header>
 
       <main className="app-main">
-        <section className="voice-section">
-          <VoiceInput onTranscript={handleVoiceTranscript} />
-        </section>
 
         <section className="guest-section">
           <GuestList
