@@ -28,7 +28,7 @@ export function CheckinResult({
   const getIcon = () => {
     switch (type) {
       case 'success':
-        return '✅';
+        return '';
       case 'error':
         return '❌';
       case 'info':
