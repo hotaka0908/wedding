@@ -29,9 +29,11 @@ body {
 
 .app-header h1 {
   color: #333;
-  font-size: 2.5rem;
+  font-size: 3.5rem;
   margin-bottom: 10px;
   font-weight: 700;
+  font-family: 'Brush Script MT', 'Lucida Handwriting', 'Dancing Script', cursive, serif;
+  letter-spacing: 2px;
 }
 
 .subtitle {
