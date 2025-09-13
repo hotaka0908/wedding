@@ -15,6 +15,7 @@ interface CheckinMessage {
 function App() {
   const [guests, setGuests] = useState<Guest[]>(initialGuests);
   const [checkinMessage, setCheckinMessage] = useState<CheckinMessage | null>(null);
+  const [showWelcomeScreen, setShowWelcomeScreen] = useState<boolean>(true);
 
   const handleVoiceTranscript = useCallback((transcript: string) => {
     if (!transcript.trim()) {
@@ -96,6 +97,22 @@ function App() {
     setCheckinMessage(null);
   };
 
+  const handleWelcomeScreenTap = () => {
+    setShowWelcomeScreen(false);
+  };
+
+  if (showWelcomeScreen) {
+    return (
+      <div className="app" onClick={handleWelcomeScreenTap}>
+        <div className="welcome-screen">
+          <img src="/image.jpg" alt="Wedding Photo" className="welcome-photo" />
+          <h1 className="welcome-title">YUKI & KENTA Wedding</h1>
+          <div className="tap-message">画面をタップ</div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="app">
       <header className="app-header">
@@ -107,7 +124,6 @@ function App() {
       </header>
 
       <main className="app-main">
-
         <section className="guest-section">
           <GuestList
             guests={guests}
