@@ -64,74 +64,39 @@ body {
 }
 
 .voice-button {
-  background: linear-gradient(135deg, #ff69b4 0%, #ff1493 100%);
+  background: url('/image.jpg') center/cover, linear-gradient(135deg, rgba(231, 76, 60, 0.8) 0%, rgba(192, 57, 43, 0.8) 100%);
   color: white;
   border: none;
-  padding: 0;
-  border-radius: 0;
-  font-size: 1.2rem;
+  padding: 40px;
+  border-radius: 50%;
+  font-size: 1.5rem;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 8px 25px rgba(255, 105, 180, 0.4);
-  width: 100px;
-  height: 90px;
+  box-shadow: 0 8px 25px rgba(231, 76, 60, 0.4);
+  width: 200px;
+  height: 200px;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  line-height: 1.1;
-  position: relative;
-  transform: rotate(-45deg);
-  margin: 50px auto;
-}
-
-.voice-button:before,
-.voice-button:after {
-  content: '';
-  position: absolute;
-  left: 50px;
-  top: 0;
-  background: linear-gradient(135deg, #ff69b4 0%, #ff1493 100%);
-  border-radius: 50px 50px 0 0;
-  width: 52px;
-  height: 80px;
-  transform: rotate(-45deg);
-  transform-origin: 0 100%;
-}
-
-.voice-button:after {
-  left: 0;
-  transform: rotate(45deg);
-  transform-origin: 100% 100%;
-}
-
-.voice-button span {
-  position: relative;
-  z-index: 10;
-  transform: rotate(45deg);
-  font-size: 1rem;
-  text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  line-height: 1.2;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
 }
 
 .voice-button:hover {
-  transform: rotate(-45deg) translateY(-4px) scale(1.05);
-  box-shadow: 0 12px 35px rgba(255, 105, 180, 0.6);
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 12px 35px rgba(231, 76, 60, 0.6);
 }
 
 .voice-button:active {
-  transform: rotate(-45deg) translateY(0);
+  transform: translateY(0);
 }
 
 .voice-button.listening {
-  background: linear-gradient(135deg, #ff3838 0%, #ff1744 100%);
+  background: url('/image.jpg') center/cover, linear-gradient(135deg, rgba(255, 56, 56, 0.9) 0%, rgba(255, 23, 68, 0.9) 100%);
   animation: pulse 1.5s infinite;
-  transform: rotate(-45deg) scale(1.1);
-}
-
-.voice-button.listening:before,
-.voice-button.listening:after {
-  background: linear-gradient(135deg, #ff3838 0%, #ff1744 100%);
+  transform: scale(1.1);
 }
 
 @keyframes pulse {
@@ -403,24 +368,10 @@ body {
   }
 
   .voice-button {
-    width: 80px;
-    height: 72px;
-    margin: 40px auto;
-  }
-
-  .voice-button:before,
-  .voice-button:after {
-    left: 40px;
-    width: 42px;
-    height: 64px;
-  }
-
-  .voice-button:after {
-    left: 0;
-  }
-
-  .voice-button span {
-    font-size: 0.8rem;
+    padding: 30px;
+    font-size: 1.2rem;
+    width: 150px;
+    height: 150px;
   }
 
   .guest-item {
