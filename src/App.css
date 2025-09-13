@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Handy+George&display=swap');
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -32,7 +34,7 @@ body {
   font-size: 3.5rem;
   margin-bottom: 10px;
   font-weight: 700;
-  font-family: 'Brush Script MT', 'Lucida Handwriting', 'Dancing Script', cursive, serif;
+  font-family: 'Handy George', cursive;
   letter-spacing: 2px;
 }
 
