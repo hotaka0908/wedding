@@ -1,12 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { VoiceRecognitionHook } from '../types';
 
-declare global {
-  interface Window {
-    SpeechRecognition: typeof SpeechRecognition;
-    webkitSpeechRecognition: typeof SpeechRecognition;
-  }
-}
 
 export function useVoiceRecognition(): VoiceRecognitionHook {
   const [isListening, setIsListening] = useState(false);
@@ -26,7 +20,7 @@ export function useVoiceRecognition(): VoiceRecognitionHook {
     recognitionInstance.interimResults = true;
     recognitionInstance.lang = 'ja-JP';
 
-    recognitionInstance.onresult = (event) => {
+    recognitionInstance.onresult = (event: SpeechRecognitionEvent) => {
       let finalTranscript = '';
 
       for (let i = event.resultIndex; i < event.results.length; i++) {
@@ -49,7 +43,7 @@ export function useVoiceRecognition(): VoiceRecognitionHook {
       setIsListening(false);
     };
 
-    recognitionInstance.onerror = (event) => {
+    recognitionInstance.onerror = (event: SpeechRecognitionErrorEvent) => {
       console.error('Speech recognition error:', event.error);
       setIsListening(false);
     };

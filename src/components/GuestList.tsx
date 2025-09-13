@@ -1,4 +1,3 @@
-import React from 'react';
 import { Guest } from '../types';
 
 interface GuestListProps {
