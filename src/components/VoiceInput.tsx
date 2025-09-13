@@ -27,12 +27,14 @@ export function VoiceInput({ onTranscript }: VoiceInputProps) {
         className={`voice-button ${isListening ? 'listening' : ''}`}
         disabled={!('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)}
       >
-        {isListening ? '🔴 録音中...' : (
-          <>
-            タップで<br />
-            音声入力
-          </>
-        )}
+        <span>
+          {isListening ? '🔴 録音中...' : (
+            <>
+              タップで<br />
+              音声入力
+            </>
+          )}
+        </span>
       </button>
 
 
