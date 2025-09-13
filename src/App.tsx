@@ -100,6 +100,7 @@ function App() {
     <div className="app">
       <header className="app-header">
         <h1>YUKI & KENTA Wedding</h1>
+        <img src="/image.jpg" alt="Wedding Photo" className="wedding-photo" />
       </header>
 
       <main className="app-main">

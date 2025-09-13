@@ -40,6 +40,15 @@ body {
   font-weight: 400;
 }
 
+.wedding-photo {
+  max-width: 100%;
+  height: auto;
+  max-height: 800px;
+  border-radius: 15px;
+  margin-top: 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
 .app-main {
   display: flex;
   flex-direction: column;
@@ -64,7 +73,7 @@ body {
 }
 
 .voice-button {
-  background: url('/image.jpg') center/cover, linear-gradient(135deg, rgba(231, 76, 60, 0.8) 0%, rgba(192, 57, 43, 0.8) 100%);
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
   color: white;
   border: none;
   padding: 40px;
@@ -81,7 +90,6 @@ body {
   justify-content: center;
   text-align: center;
   line-height: 1.2;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
 }
 
 .voice-button:hover {
@@ -94,7 +102,7 @@ body {
 }
 
 .voice-button.listening {
-  background: url('/image.jpg') center/cover, linear-gradient(135deg, rgba(255, 56, 56, 0.9) 0%, rgba(255, 23, 68, 0.9) 100%);
+  background: linear-gradient(135deg, #ff3838 0%, #ff1744 100%);
   animation: pulse 1.5s infinite;
   transform: scale(1.1);
 }
