@@ -340,7 +340,7 @@ body {
 }
 
 .guest-name.latest-checkin {
-  animation: blink-name 1.5s infinite;
+  animation: blink-name 3s infinite;
 }
 
 @keyframes blink-name {
