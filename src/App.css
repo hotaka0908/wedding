@@ -232,10 +232,6 @@ body {
 }
 
 .guest-section {
-  background: white;
-  padding: 30px;
-  border-radius: 20px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 1000px;
 }
@@ -336,7 +332,7 @@ body {
 }
 
 .guest-name.latest-checkin {
-  animation: blink-name 3s infinite;
+  animation: blink-name 2s infinite;
 }
 
 @keyframes blink-name {
