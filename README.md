@@ -1,4 +1,4 @@
-# 💒 YUKI & KENTA Wedding - 音声受付システム
+# 💒 YUKI & KOTA Wedding - 音声受付システム
 
 **結婚式・披露宴での出席確認を音声入力で効率化するWebアプリケーション**
 

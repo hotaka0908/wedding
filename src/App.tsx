@@ -106,7 +106,7 @@ function App() {
       <div className="app" onClick={handleWelcomeScreenTap}>
         <div className="welcome-screen">
           <img src="/wave.jpg" alt="Wedding Photo" className="welcome-photo" />
-          <h1 className="welcome-title">YUKI & KENTA Wedding</h1>
+          <h1 className="welcome-title">YUKI & KOTA Wedding</h1>
           <div className="tap-message">画面をタップ</div>
         </div>
       </div>
@@ -116,7 +116,7 @@ function App() {
   return (
     <div className="app">
       <header className="app-header">
-        <h1>YUKI & KENTA Wedding</h1>
+        <h1>YUKI & KOTA Wedding</h1>
       </header>
 
       <main className="app-main">
