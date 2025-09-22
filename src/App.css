@@ -307,7 +307,7 @@ body {
   justify-content: center;
   flex-direction: row;
   text-align: center;
-  gap: 15px;
+  gap: 8px;
   padding: 10px;
 }
 
@@ -472,7 +472,7 @@ body {
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    gap: 15px;
+    gap: 8px;
   }
 
   .guest-name {
