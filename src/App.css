@@ -130,7 +130,7 @@ body {
 
 .tap-message {
   position: absolute;
-  top: 50%;
+  top: 65%;
   left: 50%;
   transform: translate(-50%, -50%);
   color: white;
@@ -288,14 +288,9 @@ body {
 }
 
 .guest-sections {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 30px;
-}
-
-@media (min-width: 1024px) {
-  .guest-sections {
-    grid-template-columns: 1fr 1fr;
-  }
 }
 
 .section-title {
@@ -342,6 +337,19 @@ body {
   font-weight: 600;
   font-size: 1.1rem;
   flex: 1;
+}
+
+.guest-name.latest-checkin {
+  animation: blink-name 1.5s infinite;
+}
+
+@keyframes blink-name {
+  0%, 50% {
+    opacity: 1;
+  }
+  51%, 100% {
+    opacity: 0.3;
+  }
 }
 
 .checkin-time {

@@ -22,9 +22,9 @@ export function GuestList({ guests, onToggleAttendance }: GuestListProps) {
         <div className="present-section">
           <h3 className="section-title">出席済み ({presentGuests.length}名)</h3>
           <div className="guest-items">
-            {presentGuests.map(guest => (
+            {presentGuests.map((guest, index) => (
               <div key={guest.id} className="guest-item present">
-                <span className="guest-name">{guest.name}</span>
+                <span className={`guest-name ${index === 0 ? 'latest-checkin' : ''}`}>{guest.name}</span>
                 <span className="checkin-time">
                   {guest.checkedInAt?.toLocaleTimeString('ja-JP', {
                     hour: '2-digit',
