@@ -43,7 +43,7 @@ function App() {
         );
 
         setCheckinMessage({
-          message: `${guest.name}さん来てくれてありがとう！`,
+          message: `${guest.name}さん来てくれてありがとう😙`,
           type: 'success'
         });
 
