@@ -23,22 +23,25 @@ export function calculateSimilarity(name1: string, name2: string): number {
   const normalized1 = normalizeJapaneseName(name1);
   const normalized2 = normalizeJapaneseName(name2);
 
+  // 完全一致 (漢字)
   if (normalized1 === normalized2) {
     return 1.0;
   }
 
+  // ひらがな一致を完全一致扱い
   const hiragana1 = toHiragana(normalized1);
   const hiragana2 = toHiragana(normalized2);
 
   if (hiragana1 === hiragana2) {
-    return 0.95;
+    return 1.0;
   }
 
+  // カタカナ一致も完全一致扱い
   const katakana1 = toKatakana(normalized1);
   const katakana2 = toKatakana(normalized2);
 
   if (katakana1 === katakana2) {
-    return 0.95;
+    return 1.0;
   }
 
   return 0.0;
