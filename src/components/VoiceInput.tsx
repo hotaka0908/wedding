@@ -1,5 +1,6 @@
 import React from 'react';
 import { useVoiceRecognition } from '../hooks/useVoiceRecognition';
+import { AudioUtils } from '../utils/audioUtils';
 
 interface VoiceInputProps {
   onTranscript: (transcript: string) => void;
@@ -16,6 +17,8 @@ export function VoiceInput({ onTranscript }: VoiceInputProps) {
   }, [transcript, isListening, onTranscript, resetTranscript]);
 
   const handleStartListening = () => {
+    // タップ音を再生
+    AudioUtils.playTapSound();
     resetTranscript();
     startListening();
   };

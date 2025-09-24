@@ -463,7 +463,8 @@ body {
 .guest-item {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  gap: var(--spacing-6);
   padding: var(--spacing-4) var(--spacing-5);
   background: rgba(255, 255, 255, 0.6);
   backdrop-filter: blur(10px);
@@ -486,8 +487,12 @@ body {
   transition: opacity 0.3s ease;
 }
 
-.guest-item.present {
-  border-left: 4px solid var(--color-success);
+.guest-item.present.male {
+  border-left: 4px solid var(--color-info);
+}
+
+.guest-item.present.female {
+  border-left: 4px solid var(--color-secondary);
 }
 
 .guest-item.absent {
@@ -508,9 +513,10 @@ body {
   font-weight: 500;
   font-size: var(--font-size-lg);
   color: var(--color-gray-800);
-  flex: 1;
-  text-align: left;
+  flex: none;
+  text-align: center;
   letter-spacing: -0.01em;
+  min-width: 120px;
 }
 
 .guest-name.latest-checkin {
@@ -530,8 +536,10 @@ body {
   color: var(--color-gray-500);
   font-size: var(--font-size-sm);
   font-weight: 500;
-  margin-right: var(--spacing-4);
   font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+  flex: none;
+  min-width: 60px;
+  text-align: center;
 }
 
 .toggle-button {

@@ -1,6 +1,7 @@
 export interface Guest {
   id: number;
   name: string;
+  gender: 'male' | 'female';
   isPresent: boolean;
   checkedInAt?: Date;
 }

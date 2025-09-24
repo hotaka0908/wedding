@@ -56,6 +56,46 @@ export class AudioUtils {
     }
   }
 
+  // タップ音を生成・再生
+  static playTapSound(): void {
+    try {
+      const context = this.getAudioContext();
+
+      // 音の長さ
+      const duration = 0.1;
+
+      // オシレーターを作成（短いビープ音）
+      const oscillator = context.createOscillator();
+
+      // ゲインノードを作成（音量調整）
+      const gainNode = context.createGain();
+
+      // 周波数設定（A4 - 440Hz の軽やかな音）
+      oscillator.frequency.setValueAtTime(440, context.currentTime);
+
+      // 波形タイプ
+      oscillator.type = 'sine';
+
+      // 音量エンベロープ（短いクリック音）
+      gainNode.gain.setValueAtTime(0, context.currentTime);
+      gainNode.gain.linearRampToValueAtTime(0.05, context.currentTime + 0.01);
+      gainNode.exponentialRampToValueAtTime(0.01, context.currentTime + duration);
+
+      // 接続
+      oscillator.connect(gainNode);
+      gainNode.connect(context.destination);
+
+      // 再生
+      oscillator.start(context.currentTime);
+
+      // 停止
+      oscillator.stop(context.currentTime + duration);
+
+    } catch (error) {
+      console.warn('タップ音の再生に失敗しました:', error);
+    }
+  }
+
   // AudioContextを初期化（ユーザーの最初のクリック時）
   static initializeAudio(): void {
     try {
