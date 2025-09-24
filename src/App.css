@@ -475,17 +475,6 @@ body {
   overflow: hidden;
 }
 
-.guest-item::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 4px;
-  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
 
 .guest-item.present.male {
   border-left: 4px solid var(--color-info);
@@ -505,9 +494,6 @@ body {
   background: rgba(255, 255, 255, 0.8);
 }
 
-.guest-item:hover::before {
-  opacity: 1;
-}
 
 .guest-name {
   font-weight: 500;

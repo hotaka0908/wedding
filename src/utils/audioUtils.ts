@@ -96,6 +96,53 @@ export class AudioUtils {
     }
   }
 
+  // エラー音を生成・再生
+  static playErrorSound(): void {
+    try {
+      const context = this.getAudioContext();
+
+      // 音の長さ
+      const duration = 0.4;
+
+      // オシレーターを作成（低い不協和音）
+      const oscillator1 = context.createOscillator();
+      const oscillator2 = context.createOscillator();
+
+      // ゲインノードを作成（音量調整）
+      const gainNode = context.createGain();
+
+      // 周波数設定（不協和音 - F3とF#3）
+      oscillator1.frequency.setValueAtTime(174.61, context.currentTime); // F3
+      oscillator2.frequency.setValueAtTime(185.00, context.currentTime); // F#3
+
+      // 波形タイプ（少しハーシュな音）
+      oscillator1.type = 'triangle';
+      oscillator2.type = 'triangle';
+
+      // 音量エンベロープ（短いエラー音）
+      gainNode.gain.setValueAtTime(0, context.currentTime);
+      gainNode.gain.linearRampToValueAtTime(0.08, context.currentTime + 0.02);
+      gainNode.gain.linearRampToValueAtTime(0.04, context.currentTime + 0.1);
+      gainNode.gain.linearRampToValueAtTime(0.01, context.currentTime + duration);
+
+      // 接続
+      oscillator1.connect(gainNode);
+      oscillator2.connect(gainNode);
+      gainNode.connect(context.destination);
+
+      // 再生
+      oscillator1.start(context.currentTime);
+      oscillator2.start(context.currentTime);
+
+      // 停止
+      oscillator1.stop(context.currentTime + duration);
+      oscillator2.stop(context.currentTime + duration);
+
+    } catch (error) {
+      console.warn('エラー音の再生に失敗しました:', error);
+    }
+  }
+
   // AudioContextを初期化（ユーザーの最初のクリック時）
   static initializeAudio(): void {
     try {

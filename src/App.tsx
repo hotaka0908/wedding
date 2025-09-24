@@ -58,6 +58,9 @@ function App() {
           message: '音声が短すぎます。もう一度はっきりとお名前をお話しください。',
           type: 'error'
         });
+
+        // エラー音を再生
+        AudioUtils.playErrorSound();
       } else if (availableGuests.length === 0) {
         setCheckinMessage({
           message: '全てのゲストが既に受付済みです。',
@@ -68,6 +71,9 @@ function App() {
           message: `「${transcript}」に該当するゲストが見つかりませんでした。もう一度はっきりとお名前をお話しください。`,
           type: 'error'
         });
+
+        // エラー音を再生
+        AudioUtils.playErrorSound();
       }
     }
   }, [guests]);
