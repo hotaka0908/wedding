@@ -5,7 +5,6 @@ import { findBestMatch } from './utils/nameMatching';
 import { AudioUtils } from './utils/audioUtils';
 import { VoiceInput } from './components/VoiceInput';
 import { GuestList } from './components/GuestList';
-import { CheckinResult } from './components/CheckinResult';
 import './App.css';
 
 interface CheckinMessage {

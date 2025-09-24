@@ -3,7 +3,7 @@ import { useVoiceRecognition } from '../hooks/useVoiceRecognition';
 import { AudioUtils } from '../utils/audioUtils';
 
 interface VoiceInputProps {
-  onTranscript: (transcript: string) => void;
+  onTranscript: (_transcript: string) => void;
 }
 
 export function VoiceInput({ onTranscript }: VoiceInputProps) {

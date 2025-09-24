@@ -36,7 +36,7 @@ export class AudioUtils {
       // 音量エンベロープ（フェードイン・アウト）
       gainNode.gain.setValueAtTime(0, context.currentTime);
       gainNode.gain.linearRampToValueAtTime(0.1, context.currentTime + 0.01);
-      gainNode.gain.exponentialRampToValueAtTime(0.01, context.currentTime + duration);
+      gainNode.gain.linearRampToValueAtTime(0.01, context.currentTime + duration);
 
       // 接続
       oscillator1.connect(gainNode);
@@ -79,7 +79,7 @@ export class AudioUtils {
       // 音量エンベロープ（短いクリック音）
       gainNode.gain.setValueAtTime(0, context.currentTime);
       gainNode.gain.linearRampToValueAtTime(0.05, context.currentTime + 0.01);
-      gainNode.exponentialRampToValueAtTime(0.01, context.currentTime + duration);
+      gainNode.gain.linearRampToValueAtTime(0.01, context.currentTime + duration);
 
       // 接続
       oscillator.connect(gainNode);

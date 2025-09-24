@@ -8,7 +8,7 @@ interface CheckinMessage {
 
 interface GuestListProps {
   guests: Guest[];
-  onToggleAttendance: (guestId: number) => void;
+  onToggleAttendance: (_guestId: number) => void;
   checkinMessage?: CheckinMessage | null;
   onCloseMessage?: () => void;
 }
