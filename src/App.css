@@ -205,7 +205,7 @@ body {
 
 .welcome-title {
   position: absolute;
-  top: 75%;
+  top: 70%;
   left: 50%;
   transform: translateX(-50%);
   color: white;
