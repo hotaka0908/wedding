@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react';
 import { Guest } from './types';
 import { initialGuests } from './data/guests';
 import { findBestMatch } from './utils/nameMatching';
+import { AudioUtils } from './utils/audioUtils';
 import { VoiceInput } from './components/VoiceInput';
 import { GuestList } from './components/GuestList';
 import { CheckinResult } from './components/CheckinResult';
@@ -46,6 +47,9 @@ function App() {
           message: `${guest.name}さん来てくれてありがとう！`,
           type: 'success'
         });
+
+        // 成功時の効果音を再生
+        AudioUtils.playSuccessSound();
       }
     } else {
       console.warn('⚠️ マッチング失敗:', { transcript, match, availableGuests: guestNames });
@@ -98,6 +102,8 @@ function App() {
   };
 
   const handleWelcomeScreenTap = () => {
+    // ウェルカム画面タップ時にAudioContextを初期化
+    AudioUtils.initializeAudio();
     setShowWelcomeScreen(false);
   };
 
@@ -128,17 +134,11 @@ function App() {
           <GuestList
             guests={guests}
             onToggleAttendance={handleToggleAttendance}
+            checkinMessage={checkinMessage}
+            onCloseMessage={handleCloseMessage}
           />
         </section>
       </main>
-
-      {checkinMessage && (
-        <CheckinResult
-          message={checkinMessage.message}
-          type={checkinMessage.type}
-          onClose={handleCloseMessage}
-        />
-      )}
     </div>
   );
 }
