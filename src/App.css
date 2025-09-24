@@ -217,6 +217,8 @@ body {
   z-index: 2;
   text-align: center;
   margin: 0;
+  padding: 0 var(--spacing-4);
+  width: calc(100% - var(--spacing-8));
 }
 
 .tap-message {
@@ -732,6 +734,16 @@ body {
     align-self: center;
     min-width: 120px;
   }
+
+  /* Welcome screen tablet adjustments */
+  .welcome-title {
+    font-size: 3rem;
+    letter-spacing: 1.5px;
+  }
+
+  .tap-message {
+    font-size: 1.8rem;
+  }
 }
 
 /* Mobile */
@@ -781,5 +793,17 @@ body {
   .toggle-button {
     padding: var(--spacing-3) var(--spacing-5);
     font-size: var(--font-size-sm);
+  }
+
+  /* Welcome screen responsive adjustments */
+  .welcome-title {
+    font-size: 2.5rem;
+    letter-spacing: 1px;
+    top: 65%;
+  }
+
+  .tap-message {
+    font-size: 1.5rem;
+    top: 45%;
   }
 }
