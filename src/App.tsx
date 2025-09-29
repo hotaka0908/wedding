@@ -7,24 +7,15 @@ import { useVoiceRecognition } from './hooks/useVoiceRecognition';
 import { GuestList } from './components/GuestList';
 import './App.css';
 
-interface CheckinMessage {
-  message: string;
-  type: 'success' | 'error' | 'info';
-}
 
 function App() {
   const [guests, setGuests] = useState<Guest[]>(initialGuests);
-  const [checkinMessage, setCheckinMessage] = useState<CheckinMessage | null>(null);
   const [showWelcomeScreen, setShowWelcomeScreen] = useState<boolean>(true);
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
   const { isListening, transcript, startListening, stopListening, resetTranscript } = useVoiceRecognition();
 
   const handleVoiceTranscript = useCallback((transcript: string) => {
     if (!transcript.trim()) {
-      setCheckinMessage({
-        message: '音声が認識されませんでした。もう一度お試しください。',
-        type: 'error'
-      });
       return;
     }
 
@@ -44,10 +35,6 @@ function App() {
           )
         );
 
-        setCheckinMessage({
-          message: `${guest.name}さん来てくれてありがとう😙`,
-          type: 'success'
-        });
 
         // 成功状態を設定
         setIsSuccess(true);
@@ -64,24 +51,9 @@ function App() {
       console.warn('⚠️ マッチング失敗:', { transcript, match, availableGuests: guestNames });
 
       if (transcript.length < 2) {
-        setCheckinMessage({
-          message: '音声が短すぎます。もう一度はっきりとお名前をお話しください。',
-          type: 'error'
-        });
-
         // エラー音を再生
         AudioUtils.playErrorSound();
-      } else if (availableGuests.length === 0) {
-        setCheckinMessage({
-          message: '全てのゲストが既に受付済みです。',
-          type: 'info'
-        });
       } else if (!match || match.similarity < 0.1) {
-        setCheckinMessage({
-          message: `「${transcript}」に該当するゲストが見つかりませんでした。もう一度はっきりとお名前をお話しください。`,
-          type: 'error'
-        });
-
         // エラー音を再生
         AudioUtils.playErrorSound();
       }
@@ -101,20 +73,8 @@ function App() {
       )
     );
 
-    const guest = guests.find(g => g.id === guestId);
-    if (guest) {
-      setCheckinMessage({
-        message: guest.isPresent
-          ? `${guest.name}様の受付を取り消しました。`
-          : `${guest.name}様を手動で受付しました。`,
-        type: 'info'
-      });
-    }
   }, [guests]);
 
-  const handleCloseMessage = () => {
-    setCheckinMessage(null);
-  };
 
   const handleWelcomeScreenTap = () => {
     // ウェルカム画面タップ時にAudioContextを初期化
