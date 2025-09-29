@@ -1,19 +1,11 @@
 import { Guest } from '../types';
-import { useEffect } from 'react';
-
-interface CheckinMessage {
-  message: string;
-  type: 'success' | 'error' | 'info';
-}
 
 interface GuestListProps {
   guests: Guest[];
   onToggleAttendance: (_guestId: number) => void;
-  checkinMessage?: CheckinMessage | null;
-  onCloseMessage?: () => void;
 }
 
-export function GuestList({ guests, onToggleAttendance, checkinMessage, onCloseMessage }: GuestListProps) {
+export function GuestList({ guests, onToggleAttendance }: GuestListProps) {
   const presentGuests = guests
     .filter(guest => guest.isPresent)
     .sort((a, b) => {
@@ -22,37 +14,10 @@ export function GuestList({ guests, onToggleAttendance, checkinMessage, onCloseM
     });
   const absentGuests = guests.filter(guest => !guest.isPresent);
 
-  // 4秒後の自動消去タイマー
-  useEffect(() => {
-    if (checkinMessage && onCloseMessage) {
-      const timer = setTimeout(() => {
-        onCloseMessage();
-      }, 4000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [checkinMessage, onCloseMessage]);
-
   return (
     <div className="guest-list">
       <h2>出席状況</h2>
 
-      {checkinMessage && onCloseMessage && (
-        <div className="checkin-result-inline">
-          <div className={`checkin-message ${checkinMessage.type}`}>
-            <div className="result-content">
-              <span className="result-icon">
-                {checkinMessage.type === 'error' ? '❌' :
-                 checkinMessage.type === 'info' ? 'ℹ️' : ''}
-              </span>
-              <span className="result-message">{checkinMessage.message}</span>
-            </div>
-            <button onClick={onCloseMessage} className="close-button">
-              ×
-            </button>
-          </div>
-        </div>
-      )}
 
       <div className="guest-sections">
         <div className="present-section">

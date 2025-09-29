@@ -1,9 +1,9 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { Guest } from './types';
 import { initialGuests } from './data/guests';
 import { findBestMatch } from './utils/nameMatching';
 import { AudioUtils } from './utils/audioUtils';
-import { VoiceInput } from './components/VoiceInput';
+import { useVoiceRecognition } from './hooks/useVoiceRecognition';
 import { GuestList } from './components/GuestList';
 import './App.css';
 
@@ -16,6 +16,8 @@ function App() {
   const [guests, setGuests] = useState<Guest[]>(initialGuests);
   const [checkinMessage, setCheckinMessage] = useState<CheckinMessage | null>(null);
   const [showWelcomeScreen, setShowWelcomeScreen] = useState<boolean>(true);
+  const [isSuccess, setIsSuccess] = useState<boolean>(false);
+  const { isListening, transcript, startListening, stopListening, resetTranscript } = useVoiceRecognition();
 
   const handleVoiceTranscript = useCallback((transcript: string) => {
     if (!transcript.trim()) {
@@ -46,6 +48,14 @@ function App() {
           message: `${guest.name}さん来てくれてありがとう😙`,
           type: 'success'
         });
+
+        // 成功状態を設定
+        setIsSuccess(true);
+
+        // 3秒後に通常状態に戻す
+        setTimeout(() => {
+          setIsSuccess(false);
+        }, 3000);
 
         // 成功時の効果音を再生
         AudioUtils.playSuccessSound();
@@ -112,6 +122,25 @@ function App() {
     setShowWelcomeScreen(false);
   };
 
+  const handleImageTap = () => {
+    if (isListening) {
+      stopListening();
+    } else {
+      // タップ音を再生
+      AudioUtils.playTapSound();
+      resetTranscript();
+      startListening();
+    }
+  };
+
+  // 音声認識結果の処理
+  useEffect(() => {
+    if (transcript && !isListening) {
+      handleVoiceTranscript(transcript);
+      resetTranscript();
+    }
+  }, [transcript, isListening, handleVoiceTranscript, resetTranscript]);
+
   if (showWelcomeScreen) {
     return (
       <div className="app" onClick={handleWelcomeScreenTap}>
@@ -128,19 +157,34 @@ function App() {
     <div className="app">
       <header className="app-header">
         <h1>YUKI & KOTA Wedding</h1>
+        <div className="characters-container" onClick={handleImageTap}>
+          <img
+            src={
+              isSuccess
+                ? "/pixel3.png"
+                : isListening
+                  ? "/pixel2.png"
+                  : "/pixel1.png"
+            }
+            alt="Wedding Characters"
+            className={`wedding-characters ${isSuccess ? 'success' : ''}`}
+          />
+          <div className="instruction-text">
+            {isSuccess
+              ? '来てくれてありがとう〜'
+              : isListening
+                ? '🔴 録音中...'
+                : 'タッチで音声入力'
+            }
+          </div>
+        </div>
       </header>
 
       <main className="app-main">
-        <section className="voice-section">
-          <VoiceInput onTranscript={handleVoiceTranscript} />
-        </section>
-
         <section className="guest-section">
           <GuestList
             guests={guests}
             onToggleAttendance={handleToggleAttendance}
-            checkinMessage={checkinMessage}
-            onCloseMessage={handleCloseMessage}
           />
         </section>
       </main>

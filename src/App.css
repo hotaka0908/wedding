@@ -99,18 +99,99 @@ body {
 }
 
 .app-header h1 {
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #ffff00;
   font-size: var(--font-size-5xl);
   margin: 0;
   font-weight: 700;
-  font-family: var(--font-family);
-  letter-spacing: -0.02em;
+  font-family: 'Courier New', 'Monaco', 'Menlo', monospace;
+  letter-spacing: 0.1em;
   text-align: center;
   line-height: 1.1;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  text-shadow:
+    2px 2px 0px #000000,
+    4px 4px 0px #333333;
 }
+
+.characters-container {
+  position: relative;
+  display: inline-block;
+  margin-top: 20px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.characters-container:hover {
+  transform: scale(1.02);
+}
+
+.characters-container:active {
+  transform: scale(0.98);
+}
+
+.wedding-characters {
+  max-width: 600px;
+  height: auto;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.2));
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.wedding-characters.success {
+  animation: bounce-celebration 0.6s ease-in-out infinite;
+}
+
+@keyframes bounce-celebration {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-20px) scale(1.05);
+  }
+}
+
+.instruction-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: var(--font-size-2xl);
+  font-weight: 600;
+  color: white;
+  text-align: center;
+  letter-spacing: 0.5px;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 8px 16px;
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(4px);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  animation: pulse-instruction 2s infinite;
+}
+
+@keyframes pulse-instruction {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: translate(-50%, -50%) scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+
+
+
+
 
 .subtitle {
   color: var(--color-gray-600);
