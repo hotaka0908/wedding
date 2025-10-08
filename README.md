@@ -80,6 +80,21 @@ npm run build
 npm run preview
 ```
 
+### **テスト**
+```bash
+# Vitest を使用したユニット / コンポーネントテスト
+npm run test
+
+# カバレッジレポートを CLI と HTML で生成（coverage/ 以下）
+npm run test -- --coverage
+```
+
+主なテスト内容:
+- `App` の音声受付フロー（成功・失敗時の効果音挙動をモックで検証）
+- `GuestList` の出席者リスト表示と手動トグル操作
+- `useVoiceRecognition` フックの開始/停止・結果更新ロジック
+- `nameMatching`/`audioUtils` などのユーティリティ
+
 ## 🛠️ 技術スタック
 
 ### **フロントエンド**

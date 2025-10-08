@@ -19,46 +19,59 @@ function App() {
       return;
     }
 
-    const availableGuests = guests.filter(guest => !guest.isPresent);
-    const guestNames = availableGuests.map(guest => guest.name);
+    let wasSuccessful = false;
+    let matchForLog: ReturnType<typeof findBestMatch> = null;
+    let availableGuestsForLog: string[] = [];
+    let shouldPlayErrorSound = false;
 
-    const match = findBestMatch(transcript, guestNames);
+    setGuests(prevGuests => {
+      const availableGuests = prevGuests.filter(guest => !guest.isPresent);
+      const guestNames = availableGuests.map(guest => guest.name);
+      const match = findBestMatch(transcript, guestNames);
 
-    if (match && match.similarity >= 0.9) {
-      const guest = availableGuests.find(g => g.name === match.name);
-      if (guest) {
-        setGuests(prevGuests =>
-          prevGuests.map(g =>
-            g.id === guest.id
-              ? { ...g, isPresent: true, checkedInAt: new Date() }
-              : g
-          )
-        );
+      availableGuestsForLog = guestNames;
+      matchForLog = match;
+      shouldPlayErrorSound =
+        transcript.length < 2 || !match || match.similarity < 0.1;
 
+      if (match && match.similarity >= 0.9) {
+        const matchedGuest = availableGuests.find(g => g.name === match.name);
 
-        // 成功状態を設定
-        setIsSuccess(true);
+        if (matchedGuest) {
+          wasSuccessful = true;
 
-        // 3秒後に通常状態に戻す
-        setTimeout(() => {
-          setIsSuccess(false);
-        }, 3000);
-
-        // 成功時の効果音を再生
-        AudioUtils.playSuccessSound();
+          return prevGuests.map(guest =>
+            guest.id === matchedGuest.id
+              ? { ...guest, isPresent: true, checkedInAt: new Date() }
+              : guest
+          );
+        }
       }
-    } else {
-      console.warn('⚠️ マッチング失敗:', { transcript, match, availableGuests: guestNames });
 
-      if (transcript.length < 2) {
-        // エラー音を再生
-        AudioUtils.playErrorSound();
-      } else if (!match || match.similarity < 0.1) {
-        // エラー音を再生
-        AudioUtils.playErrorSound();
-      }
+      return prevGuests;
+    });
+
+    if (wasSuccessful) {
+      setIsSuccess(true);
+
+      setTimeout(() => {
+        setIsSuccess(false);
+      }, 3000);
+
+      AudioUtils.playSuccessSound();
+      return;
     }
-  }, [guests]);
+
+    console.warn('⚠️ マッチング失敗:', {
+      transcript,
+      match: matchForLog,
+      availableGuests: availableGuestsForLog
+    });
+
+    if (shouldPlayErrorSound) {
+      AudioUtils.playErrorSound();
+    }
+  }, []);
 
   const handleToggleAttendance = useCallback((guestId: number) => {
     setGuests(prevGuests =>
@@ -73,7 +86,7 @@ function App() {
       )
     );
 
-  }, [guests]);
+  }, []);
 
 
   const handleWelcomeScreenTap = () => {
