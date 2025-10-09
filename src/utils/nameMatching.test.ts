@@ -35,16 +35,20 @@ describe('findBestMatch', () => {
     expect(result?.similarity).toBe(1);
   });
 
-  it('敬称付きでも一致させる', () => {
+  it('敬称を含むと一致しない', () => {
     const result = findBestMatch('佐藤花子さんです', guests);
-    expect(result?.guest.name).toBe('佐藤花子');
-    expect(result?.similarity).toBeCloseTo(1);
+    expect(result).toBeNull();
   });
 
-  it('別の言い回しを含んでも最も近い候補を返す', () => {
-    const result = findBestMatch('田中太郎お願いします', guests);
+  it('名前+です で一致させる', () => {
+    const result = findBestMatch('田中太郎です', guests);
     expect(result?.guest.name).toBe('田中太郎');
-    expect(result?.similarity).toBeGreaterThan(0.75);
+    expect(result?.similarity).toBeGreaterThanOrEqual(0.9);
+  });
+
+  it('名前+です 以外の表現は一致しない', () => {
+    const result = findBestMatch('田中太郎お願いします', guests);
+    expect(result).toBeNull();
   });
 
   it('わずかな漢字違いでも最有力候補を拾う', () => {
