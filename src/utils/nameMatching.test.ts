@@ -12,6 +12,10 @@ describe('calculateSimilarity', () => {
     expect(calculateSimilarity('サトウハナコ', 'さとうはなこ')).toBe(1);
   });
 
+  it('漢字同士が一致する場合も1.0', () => {
+    expect(calculateSimilarity('加藤直子', '加藤直子')).toBe(1);
+  });
+
   it('一文字異なる場合は0.9未満になる', () => {
     const similarity = calculateSimilarity('さとうはなこ', 'さとうはなき');
     expect(similarity).toBeLessThan(0.9);
@@ -23,6 +27,18 @@ describe('findBestMatch', () => {
     const result = findBestMatch('さとうはなこ', guests);
     expect(result?.guest.name).toBe('佐藤花子');
     expect(result?.similarity).toBe(1);
+  });
+
+  it('漢字入力でも該当ゲストを返す', () => {
+    const result = findBestMatch('田中太郎', guests);
+    expect(result?.guest.name).toBe('田中太郎');
+    expect(result?.similarity).toBe(1);
+  });
+
+  it('敬称付きでも一致させる', () => {
+    const result = findBestMatch('佐藤花子さんです', guests);
+    expect(result?.guest.name).toBe('佐藤花子');
+    expect(result?.similarity).toBeCloseTo(1);
   });
 
   it('最も近い候補を返すが類似度は低くなる', () => {

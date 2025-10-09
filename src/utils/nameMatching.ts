@@ -7,13 +7,54 @@ function toHiragana(str: string): string {
   });
 }
 
+const HONORIFIC_SUFFIXES = [
+  'さんです',
+  'さまです',
+  '様です',
+  'ちゃんです',
+  'くんです',
+  'さん',
+  'さま',
+  '様',
+  'くん',
+  'ちゃん',
+  '氏',
+  '殿'
+];
+
+function stripHonorifics(value: string): string {
+  let result = value;
+  let trimmed = result.trim();
+  let changed = true;
+
+  while (changed && trimmed.length) {
+    changed = false;
+    for (const suffix of HONORIFIC_SUFFIXES) {
+      if (trimmed.endsWith(suffix)) {
+        trimmed = trimmed.slice(0, trimmed.length - suffix.length);
+        changed = true;
+      }
+    }
+  }
+
+  return trimmed.trim();
+}
+
+const REMOVE_BRACKETS_REGEX = /\[|\]/g;
+const REMOVE_CHARS_REGEX = /[()（）「」『』【】｛｝{}・･=~\-ー－―、。,.!?！？]/g;
+
 function normalizeJapaneseName(name: string): string {
-  return toHiragana(
+  const stripped = stripHonorifics(
     name
-      .replace(/\s+/g, '')
-      .toLowerCase()
       .normalize('NFKC')
+      .toLowerCase()
+      .replace(/\s+/g, '')
+      .replace(/\u3000/g, '')
+      .replace(REMOVE_BRACKETS_REGEX, '')
+      .replace(REMOVE_CHARS_REGEX, '')
   );
+
+  return toHiragana(stripped);
 }
 
 function levenshteinDistance(a: string, b: string): number {
@@ -55,24 +96,24 @@ function levenshteinDistance(a: string, b: string): number {
   return matrix[a.length][b.length];
 }
 
-export function calculateSimilarity(input: string, reading: string): number {
-  if (!reading) {
+export function calculateSimilarity(input: string, target: string): number {
+  if (!target) {
     return 0;
   }
 
   const normalizedInput = normalizeJapaneseName(input);
-  const normalizedReading = normalizeJapaneseName(reading);
+  const normalizedTarget = normalizeJapaneseName(target);
 
-  if (!normalizedInput || !normalizedReading) {
+  if (!normalizedInput || !normalizedTarget) {
     return 0;
   }
 
-  if (normalizedInput === normalizedReading) {
+  if (normalizedInput === normalizedTarget) {
     return 1;
   }
 
-  const distance = levenshteinDistance(normalizedInput, normalizedReading);
-  const maxLength = Math.max(normalizedInput.length, normalizedReading.length);
+  const distance = levenshteinDistance(normalizedInput, normalizedTarget);
+  const maxLength = Math.max(normalizedInput.length, normalizedTarget.length);
 
   return 1 - distance / maxLength;
 }
@@ -83,7 +124,9 @@ export function findBestMatch(inputName: string, guests: MatchCandidate[]): { gu
   let best: { guest: MatchCandidate; similarity: number } | null = null;
 
   for (const guest of guests) {
-    const similarity = calculateSimilarity(inputName, guest.reading);
+    const readingSimilarity = calculateSimilarity(inputName, guest.reading);
+    const kanjiSimilarity = calculateSimilarity(inputName, guest.name);
+    const similarity = Math.max(readingSimilarity, kanjiSimilarity);
 
     if (!best || similarity > best.similarity) {
       best = { guest, similarity };
