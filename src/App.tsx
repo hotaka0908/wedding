@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { Guest } from './types';
 import { initialGuests } from './data/guests';
 import { findBestMatch } from './utils/nameMatching';
@@ -7,66 +7,58 @@ import { useVoiceRecognition } from './hooks/useVoiceRecognition';
 import { GuestList } from './components/GuestList';
 import './App.css';
 
-
 function App() {
   const [guests, setGuests] = useState<Guest[]>(initialGuests);
+  const guestsRef = useRef(guests);
   const [showWelcomeScreen, setShowWelcomeScreen] = useState<boolean>(true);
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
   const { isListening, transcript, startListening, stopListening, resetTranscript } = useVoiceRecognition();
 
-  const handleVoiceTranscript = useCallback((transcript: string) => {
-    if (!transcript.trim()) {
+  useEffect(() => {
+    guestsRef.current = guests;
+  }, [guests]);
+
+  const handleVoiceTranscript = useCallback((transcriptValue: string) => {
+    if (!transcriptValue.trim()) {
       return;
     }
 
-    let wasSuccessful = false;
-    let matchForLog: ReturnType<typeof findBestMatch> = null;
-    let availableGuestsForLog: string[] = [];
-    let shouldPlayErrorSound = false;
+    const currentGuests = guestsRef.current;
+    const availableGuests = currentGuests.filter(guest => !guest.isPresent);
+    const guestNames = availableGuests.map(guest => guest.name);
+    const match = findBestMatch(transcriptValue, guestNames);
 
-    setGuests(prevGuests => {
-      const availableGuests = prevGuests.filter(guest => !guest.isPresent);
-      const guestNames = availableGuests.map(guest => guest.name);
-      const match = findBestMatch(transcript, guestNames);
+    if (match && match.similarity >= 0.9) {
+      const matchedGuest = availableGuests.find(g => g.name === match.name);
 
-      availableGuestsForLog = guestNames;
-      matchForLog = match;
-      shouldPlayErrorSound =
-        transcript.length < 2 || !match || match.similarity < 0.1;
-
-      if (match && match.similarity >= 0.9) {
-        const matchedGuest = availableGuests.find(g => g.name === match.name);
-
-        if (matchedGuest) {
-          wasSuccessful = true;
-
-          return prevGuests.map(guest =>
+      if (matchedGuest) {
+        setGuests(prevGuests =>
+          prevGuests.map(guest =>
             guest.id === matchedGuest.id
               ? { ...guest, isPresent: true, checkedInAt: new Date() }
               : guest
-          );
-        }
+          )
+        );
+
+        setIsSuccess(true);
+
+        setTimeout(() => {
+          setIsSuccess(false);
+        }, 3000);
+
+        AudioUtils.playSuccessSound();
+        return;
       }
-
-      return prevGuests;
-    });
-
-    if (wasSuccessful) {
-      setIsSuccess(true);
-
-      setTimeout(() => {
-        setIsSuccess(false);
-      }, 3000);
-
-      AudioUtils.playSuccessSound();
-      return;
     }
 
     console.warn('⚠️ マッチング失敗:', {
-      transcript,
-      match: matchForLog,
-      availableGuests: availableGuestsForLog
+      transcript: transcriptValue,
+      match,
+      availableGuests: guestNames
     });
+
+    const shouldPlayErrorSound =
+      transcriptValue.length < 2 || !match || match.similarity < 0.1;
 
     if (shouldPlayErrorSound) {
       AudioUtils.playErrorSound();
@@ -87,7 +79,6 @@ function App() {
     );
 
   }, []);
-
 
   const handleWelcomeScreenTap = () => {
     // ウェルカム画面タップ時にAudioContextを初期化
