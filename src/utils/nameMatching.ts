@@ -8,18 +8,76 @@ function toHiragana(str: string): string {
 }
 
 const HONORIFIC_SUFFIXES = [
+  'さんでございます',
+  'さまでございます',
+  '様でございます',
+  'ちゃんでございます',
+  'くんでございます',
+  'さんでした',
+  'さまでした',
+  '様でした',
+  'ちゃんでした',
+  'くんでした',
   'さんです',
   'さまです',
   '様です',
   'ちゃんです',
   'くんです',
-  'さん',
-  'さま',
-  '様',
-  'くん',
-  'ちゃん',
-  '氏',
-  '殿'
+  'さんでーす',
+  'さまでーす',
+  '様でーす',
+  'ちゃんでーす',
+  'くんでーす',
+  'さんです！',
+  'さんです。',
+  'さまです！',
+  'さまです。',
+  '様です！',
+  '様です。',
+  'ちゃんです！',
+  'ちゃんです。',
+  'くんです！',
+  'くんです。',
+  'お願いします',
+  'おねがいします',
+  'おねがいしまーす',
+  'お願いいたします',
+  'お願いいたしまーす',
+  'お願い致します',
+  'お願い申し上げます',
+  'お願い',
+  'おねがい',
+  'きました',
+  '来ました',
+  'がきました',
+  '参りました',
+  'まいりました',
+  'でございます',
+  'でございまーす',
+  'でございます！',
+  'でございます。',
+  'でした！',
+  'でした。',
+  'でーす',
+  'です！',
+  'です。',
+  'です',
+  'でした',
+  'ですね',
+  'でしょうか',
+  'でしょう',
+  'だそうです',
+  'とのことです',
+  'でございますので',
+  'でございますが',
+  'でございますけど',
+  'とのこと',
+  'でーす！',
+  'でーす。',
+  'です〜',
+  'だそうです！',
+  'だそうです。',
+  'ですー'
 ];
 
 function stripHonorifics(value: string): string {
@@ -122,6 +180,7 @@ type MatchCandidate = Pick<Guest, 'id' | 'name' | 'reading'>;
 
 export function findBestMatch(inputName: string, guests: MatchCandidate[]): { guest: MatchCandidate; similarity: number } | null {
   let best: { guest: MatchCandidate; similarity: number } | null = null;
+  let secondBest: { guest: MatchCandidate; similarity: number } | null = null;
 
   for (const guest of guests) {
     const readingSimilarity = calculateSimilarity(inputName, guest.reading);
@@ -129,9 +188,31 @@ export function findBestMatch(inputName: string, guests: MatchCandidate[]): { gu
     const similarity = Math.max(readingSimilarity, kanjiSimilarity);
 
     if (!best || similarity > best.similarity) {
+      secondBest = best;
       best = { guest, similarity };
+    } else if (!secondBest || similarity > secondBest.similarity) {
+      secondBest = { guest, similarity };
     }
   }
 
-  return best;
+  if (!best) {
+    return null;
+  }
+
+  const PRIMARY_THRESHOLD = 0.9;
+  const FALLBACK_THRESHOLD = 0.75;
+  const GAP_THRESHOLD = 0.15;
+
+  if (best.similarity >= PRIMARY_THRESHOLD) {
+    return best;
+  }
+
+  if (
+    best.similarity >= FALLBACK_THRESHOLD &&
+    (!secondBest || best.similarity - secondBest.similarity >= GAP_THRESHOLD)
+  ) {
+    return best;
+  }
+
+  return null;
 }

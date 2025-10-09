@@ -41,10 +41,21 @@ describe('findBestMatch', () => {
     expect(result?.similarity).toBeCloseTo(1);
   });
 
-  it('最も近い候補を返すが類似度は低くなる', () => {
-    const result = findBestMatch('さとうたろう', guests);
-    expect(result?.guest.name).toBe('佐藤花子');
-    expect(result?.similarity).toBeLessThan(1);
+  it('別の言い回しを含んでも最も近い候補を返す', () => {
+    const result = findBestMatch('田中太郎お願いします', guests);
+    expect(result?.guest.name).toBe('田中太郎');
+    expect(result?.similarity).toBeGreaterThan(0.75);
+  });
+
+  it('わずかな漢字違いでも最有力候補を拾う', () => {
+    const fallbackGuests = [
+      { id: 1, name: '田中太郎', reading: 'たなかたろう' },
+      { id: 2, name: '田口太郎', reading: 'たぐちたろう' }
+    ];
+
+    const result = findBestMatch('田中太老', fallbackGuests);
+    expect(result?.guest.name).toBe('田中太郎');
+    expect(result?.similarity ?? 0).toBeGreaterThanOrEqual(0.75);
   });
 
   it('対象ゲストがいない場合はnull', () => {
