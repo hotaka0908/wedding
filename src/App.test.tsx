@@ -51,7 +51,7 @@ describe('App', () => {
 
   it('音声認識の結果で出席を確定し成功音を再生する', async () => {
     const App = (await import('./App')).default;
-    mockVoiceState.transcript = '田中太郎';
+    mockVoiceState.transcript = 'たなかたろう';
 
     render(<App />);
 

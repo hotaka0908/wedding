@@ -1,41 +1,37 @@
 import { describe, expect, it } from 'vitest';
-import {
-  calculateSimilarity,
-  findBestMatch,
-  normalizeJapaneseName
-} from './nameMatching';
+import { calculateSimilarity, findBestMatch } from './nameMatching';
 
-describe('normalizeJapaneseName', () => {
-  it('空白や全角を正規化し小文字に変換する', () => {
-    expect(normalizeJapaneseName(' Ｔａｎａｋａ 太郎　')).toBe('tanaka太郎');
-  });
-});
+const guests = [
+  { id: 1, name: '佐藤花子', reading: 'さとうはなこ' },
+  { id: 2, name: '田中太郎', reading: 'たなかたろう' },
+  { id: 3, name: '鈴木一郎', reading: 'すずきいちろう' }
+];
 
 describe('calculateSimilarity', () => {
-  it('完全一致は1.0を返す', () => {
-    expect(calculateSimilarity('佐藤花子', '佐藤花子')).toBe(1);
+  it('ひらがなとカタカナで同じ読みなら1.0', () => {
+    expect(calculateSimilarity('サトウハナコ', 'さとうはなこ')).toBe(1);
   });
 
-  it('ひらがなとカタカナが一致すれば1.0を返す', () => {
-    expect(calculateSimilarity('さとうはなこ', 'サトウハナコ')).toBe(1);
-  });
-
-  it('一致しない場合は0.0を返す', () => {
-    expect(calculateSimilarity('佐藤花子', '田中太郎')).toBe(0);
+  it('一文字異なる場合は0.9未満になる', () => {
+    const similarity = calculateSimilarity('さとうはなこ', 'さとうはなき');
+    expect(similarity).toBeLessThan(0.9);
   });
 });
 
 describe('findBestMatch', () => {
-  it('最も高い類似度の名前を返す', () => {
-    const guests = ['サトウハナコ', 'タナカタロウ', 'スズキイチロウ'];
-    expect(findBestMatch('さとうはなこ', guests)).toEqual({
-      name: 'サトウハナコ',
-      similarity: 1
-    });
+  it('読みが一致するゲストを返す', () => {
+    const result = findBestMatch('さとうはなこ', guests);
+    expect(result?.guest.name).toBe('佐藤花子');
+    expect(result?.similarity).toBe(1);
   });
 
-  it('閾値を満たさない場合はnullを返す', () => {
-    const guests = ['佐藤花子', '田中太郎', '鈴木一郎'];
-    expect(findBestMatch('unknown', guests)).toBeNull();
+  it('最も近い候補を返すが類似度は低くなる', () => {
+    const result = findBestMatch('さとうたろう', guests);
+    expect(result?.guest.name).toBe('佐藤花子');
+    expect(result?.similarity).toBeLessThan(1);
+  });
+
+  it('対象ゲストがいない場合はnull', () => {
+    expect(findBestMatch('さとうはなこ', [])).toBeNull();
   });
 });

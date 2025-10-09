@@ -18,6 +18,8 @@ function App() {
     guestsRef.current = guests;
   }, [guests]);
 
+  const MATCH_THRESHOLD = 0.9;
+
   const handleVoiceTranscript = useCallback((transcriptValue: string) => {
     if (!transcriptValue.trim()) {
       return;
@@ -25,40 +27,37 @@ function App() {
 
     const currentGuests = guestsRef.current;
     const availableGuests = currentGuests.filter(guest => !guest.isPresent);
-    const guestNames = availableGuests.map(guest => guest.name);
-    const match = findBestMatch(transcriptValue, guestNames);
+    const match = findBestMatch(transcriptValue, availableGuests);
 
-    if (match && match.similarity >= 0.9) {
-      const matchedGuest = availableGuests.find(g => g.name === match.name);
+    if (match && match.similarity >= MATCH_THRESHOLD) {
+      const matchedGuest = match.guest;
 
-      if (matchedGuest) {
-        setGuests(prevGuests =>
-          prevGuests.map(guest =>
-            guest.id === matchedGuest.id
-              ? { ...guest, isPresent: true, checkedInAt: new Date() }
-              : guest
-          )
-        );
+      setGuests(prevGuests =>
+        prevGuests.map(guest =>
+          guest.id === matchedGuest.id
+            ? { ...guest, isPresent: true, checkedInAt: new Date() }
+            : guest
+        )
+      );
 
-        setIsSuccess(true);
+      setIsSuccess(true);
 
-        setTimeout(() => {
-          setIsSuccess(false);
-        }, 3000);
+      setTimeout(() => {
+        setIsSuccess(false);
+      }, 3000);
 
-        AudioUtils.playSuccessSound();
-        return;
-      }
+      AudioUtils.playSuccessSound();
+      return;
     }
 
     console.warn('⚠️ マッチング失敗:', {
       transcript: transcriptValue,
       match,
-      availableGuests: guestNames
+      availableGuests: availableGuests.map(guest => guest.name)
     });
 
     const shouldPlayErrorSound =
-      transcriptValue.length < 2 || !match || match.similarity < 0.1;
+      transcriptValue.length < 2 || !match || match.similarity < MATCH_THRESHOLD / 2;
 
     if (shouldPlayErrorSound) {
       AudioUtils.playErrorSound();

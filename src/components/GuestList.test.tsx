@@ -11,13 +11,15 @@ describe('GuestList', () => {
       name: '山田 太郎',
       gender: 'male',
       isPresent: true,
+      reading: 'やまだたろう',
       checkedInAt: new Date('2024-01-01T10:00:00Z')
     },
     {
       id: 2,
       name: '佐藤 花子',
       gender: 'female',
-      isPresent: false
+      isPresent: false,
+      reading: 'さとうはなこ'
     }
   ];
 

@@ -3,6 +3,7 @@ export interface Guest {
   name: string;
   gender: 'male' | 'female';
   isPresent: boolean;
+  reading: string;
   checkedInAt?: Date;
 }
 
